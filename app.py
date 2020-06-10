@@ -29,6 +29,10 @@ def decryptr():
 def entry():
     return jsonify({'text': decrypt_this(request.form['text'],request.form['cipher'],request.form['type'],request.form['timeout'])})
 
+def create_app():
+    compress.init_app(app)
+    app.run(threaded=True, ssl_context='adhoc')
+
 # Run threaded in production!
 if __name__ == '__main__':
     compress.init_app(app)

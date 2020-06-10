@@ -11,3 +11,4 @@ $upstream_port = 5000
 WHEN CHANGES ARE MADE:
 Run Docker Build.
 Recreate container in portainer.
+Ensure entrypoint is empty.
