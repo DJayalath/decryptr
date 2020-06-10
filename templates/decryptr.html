@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+    <!-- Invisible head and meta-data -->
+    <head>
+        <title>DecryptR</title>
+
+        <!-- Meta-data -->
+        <meta name="description" content="Classical cipher decryption tool" />
+        <meta name="keywords"
+        content="vigenere,caesar,beaufort,hill,porta,affine,bifid,atbash,substitution,cipher,cipher cracker,cipher decoder,cipher decrypt" />
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='decryptr/css/main.css') }}" />
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='decryptr/favicon.ico') }}">
+        <link rel="icon" sizes="16x16 32x32 64x64" href="{{ url_for('static', filename='decryptr/favicon.ico') }}">
+        <link rel="icon" type="image/png" sizes="196x196" href="{{ url_for('static', filename='decryptr/favicon-192.png') }}">
+        <link rel="icon" type="image/png" sizes="160x160" href="{{ url_for('static', filename='decryptr/favicon-160.png') }}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='decryptr/favicon-96.png') }}">
+        <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('static', filename='decryptr/favicon-64.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='decryptr/favicon-32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='decryptr/favicon-16.png') }}">
+        <link rel="apple-touch-icon" href="{{ url_for('static', filename='decryptr/decryptr/favicon-57.png') }}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='decryptr/favicon-114.png') }}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='decryptr/favicon-72.png') }}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='decryptr/favicon-144.png') }}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='decryptr/favicon-60.png') }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='decryptr/favicon-120.png') }}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='decryptr/favicon-76.png') }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='decryptr/favicon-152.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='decryptr/favicon-180.png') }}">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+        <meta name="msapplication-TileImage" content="{{ url_for('static', filename='decryptr/favicon-144.png') }}">
+        <meta name="msapplication-config" content="{{ url_for('static', filename='decryptr/browserconfig.xml') }}">
+
+    </head>
+
+    <!-- Start of visible site -->
+    <body onload="onload()">
+        <div>
+            <h1>
+                DECRYPTR
+            </h1>
+            <h2>
+                The Automatic Classical Cipher Decryption Tool
+            </h2>
+        </div>
+        <br/>
+        <h3>Select Cipher</h3>
+        <br/>
+
+        <!-- Cipher Selection Radio -->
+        <div style="margin-bottom: 15px; margin-top: 0px">
+            <input type="radio" id="Caesar" name="selection" value="1" form="entry" onclick="save_cipher(this.value)" />
+            <label for="Caesar" form="entry" style="margin: 2px;">Caesar</label>
+            <input type="radio" id="Substitution" name="selection" value="3" form="entry" onclick="save_cipher(this.value)" />
+            <label for="Substitution" form="entry" style="margin: 2px;">Substitution</label>
+            <input type="radio" id="Vigenere" name="selection" value="2" form="entry" onclick="save_cipher(this.value)" />
+            <label for="Vigenere" form="entry" style="margin: 2px;">Vigenère</label>
+            <input type="radio" id="Beaufort" name="selection" value="4" form="entry" onclick="save_cipher(this.value)" />
+            <label for="Beaufort" form="entry" style="margin: 2px;">Beaufort</label>
+            <input type="radio" id="Hill" name="selection" value="5" form="entry" onclick="save_cipher(this.value)" />
+            <label for="Hill" form="entry" style="margin: 2px;">Hill</label>
+        </div>
+        <br/>
+        <br/>
+
+        <!-- POST Form -->
+        <form action="" name="entry" id="entry" method="POST">
+            <textarea placeholder="Enter Cipher..." id="inputtext" type="text" name="entry" class="inputbox"></textarea>
+            <br />
+            <br />
+            <!-- NOTE: Onclick attributes cause errors with submitting form -->
+            <input id="subButton" type="submit" class="form__button" value="DECRYPT" />
+            <br />
+            <br />
+        </form>
+
+        <div id="loadcontainer">
+            <textarea id="output" type="text" name="output" class="inputbox" readonly></textarea>
+            <!-- Load Spinner -->
+            <svg version="1.1" id="L7" style="display: none;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+             <path fill="#fff" d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3
+              c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
+                  <animateTransform
+                     attributeName="transform"
+                     attributeType="XML"
+                     type="rotate"
+                     dur="2s"
+                     from="0 50 50"
+                     to="360 50 50"
+                     repeatCount="indefinite" />
+              </path>
+             <path fill="#fff" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7
+              c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
+                  <animateTransform
+                     attributeName="transform"
+                     attributeType="XML"
+                     type="rotate"
+                     dur="1s"
+                     from="0 50 50"
+                     to="-360 50 50"
+                     repeatCount="indefinite" />
+              </path>
+             <path fill="#fff" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5
+              L82,35.7z">
+                  <animateTransform
+                     attributeName="transform"
+                     attributeType="XML"
+                     type="rotate"
+                     dur="2s"
+                     from="0 50 50"
+                     to="360 50 50"
+                     repeatCount="indefinite" />
+              </path>
+            </svg>
+
+        </div>
+		<br />
+
+        <!-- Lower Settings -->
+        <div class="w3-bar">
+            <button id="eraser" class="form__button">Clear</button>
+            <button id="myBtn" class="form__button">Settings</button>
+        </div>
+
+        <!-- Modal -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h1 style="font-size: 30px;">SETTINGS</h1>
+                </div>
+                <div class="modal-body">
+                    <p>Set Decryption Time (seconds):</p>
+
+                    <!-- Slider -->
+                    <div class="slidecontainer">
+                        <input type="range" min="1" max="100" class="slider" name="timeout_slider" id="myRange" form="entry" onmouseup="save_slider(this.value)">
+                        <p>Value: <span id="demo"></span></p>
+                    </div>
+
+                    <div class="container">
+
+                        <p style="margin-bottom: 22px;">Hill Matrix Dimensions (<i>m x n</i>):</p>
+
+                            <!-- Hill Matrix Radio -->
+                            <input type="radio" id="f-option" name="selector" value="2" form="entry" onclick="save_matrix(this.value)" />
+                            <label for="f-option">2 x 2</label>
+
+                            <input type="radio" id="s-option" name="selector" value="3" form="entry" onclick="save_matrix(this.value)" />
+                            <label for="s-option">3 x 3</label>
+
+                            <br />
+                            <br />
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <p>
+                        <pre>Decryption time applies only for anytime algorithms used in solving substitution ciphers (default: 15s)
+The longer your cipher, the more decryption time needed for an accurate answer</pre>
+                    <p>
+                </div>
+
+          </div>
+        </div>
+
+    </body>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='decryptr/js/interaction.js') }}"></script>
+
+    <!-- Dynamic POST and Refresh AJAX -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/color/jquery.color-git.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#entry').submit(function(e) {
+                e.preventDefault();
+                $("#output").removeClass("bgfinished").addClass("bgdecrypting");
+                $("#L7").fadeIn(500);
+                $("#output").text('');
+                $.post('/endpoint', {
+                    text: $("textarea#inputtext").val(),
+                    cipher: $("input[name='selection']:checked").val(),
+                    type: $("input[name='selector']:checked").val(),
+                    timeout: $("input#myRange").val()
+                }).done(function(response) {
+                    $("#L7").fadeOut(500)
+                    $("#output").removeClass("bgdecrypting").addClass("bgfinished")
+                    setTimeout(function(){
+                        $("#output").text(response['text']);
+                        $("input#subButton").select().blur();
+                    }, 750);
+                }).fail(function() {
+                    $("#output").removeClass("bgdecrypting").addClass("bgfinished")
+                    $("#L7").fadeOut(500)
+                    setTimeout(function(){
+                        $("#output").text("ERROR: AJAX FAILED");
+                        $("input#subButton").select().blur();
+                    }, 750);
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#eraser").click(function(){
+                $("#output").text('')
+                $("textarea#inputtext").val('')
+                $("#eraser").select().blur()
+            });
+        });
+    </script>
+
+</html>
