@@ -7,3 +7,7 @@ docker run -d -p 5000:5000 --network=my-net decryptr:latest
 Note that letsencrypt's decryptr.subdomain.conf should have:
 $upstream_app = <ip of this container in my-net network>
 $upstream_port = 5000
+
+WHEN CHANGES ARE MADE:
+Run Docker Build.
+Recreate container in portainer.
